@@ -74,3 +74,9 @@ const scraper = () => {
 run `node scraper.js` again
 
 At this point you should be able to see the data and start to make decisions about how to grab different elements, run some clean up functions and start to piece it all together to match your db schema
+
+- Helpful Tips:
+  * Don't worry about writing super clean and efficient code when scraping. The goal is to find the data, then you'll seed your database and be done with it. 
+  * Scraping is hard.
+  * We don't have much to say.
+  
