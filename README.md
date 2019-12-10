@@ -1,24 +1,32 @@
 # api-tutorial
 
-## authors
+## Authors
+[Paige Gorry](http://github.com/paigeegorry) && [Kate Dameron](http://github.com/katedam)
 
-Paige Gorry
-Kate Dameron
+## Contribution Policy
+Think we missed something? Have additional resources that you want to share? Feel free to submit a PR and contribute to this project! 
 
-## Getting set up
+## Getting started
+This tutorial walks you through creating your own API by data-scraping using a Node.js application with an Express server and NOSQL database (MongoDB). Feel free to substitute your own language, server, and db of choice. 
 
-For this project you'll need to set up a Node.js server. We used Express.js but you can use whatever you want!
+If you are a beginner, please check out our beginner.md file for resource links. 
 
 <!-- [insert links to setting up a node server with express] -->
+
+What you need to get started: 
+- Node.js
+- Express
+- A website to scrape
+
+### Tips on finding a site to scrape
+1. Open up the dev tools! Don't just choose your favorite website, but see what 
 
 ## Step 1: Get set up to scrape some data!
 
 - You will need a parser package (there are 100s of them available so you can use whatever you want). For this project we used [node-html-parser](https://www.npmjs.com/package/node-html-parser).
-- You will also need to install an npm package to help with the request. We used [super-agent](https://www.npmjs.com/package/superagent).
+- You will also need to install an npm package to make with the request. We used [super-agent](https://www.npmjs.com/package/superagent).
 
-run
-
-`npm add -D node-html-parser superagent`
+run `npm add -D node-html-parser superagent` (these are dev dependencies hence the -D)
 
 - Now make a _scraper.js_ file at the root of your repo
 - Add a function to make the initial request
@@ -74,3 +82,9 @@ const scraper = () => {
 run `node scraper.js` again
 
 At this point you should be able to see the data and start to make decisions about how to grab different elements, run some clean up functions and start to piece it all together to match your db schema
+
+## Check out our other APIs
+* futurama (the api that started it all!)
+* last-airbender
+* dragon-age
+* doctor-who
