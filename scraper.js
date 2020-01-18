@@ -8,25 +8,34 @@ const gimmeTheData = html => {
   const rowColAttrs = html.querySelectorAll('td')
     .map(node => ({ ...node.attributes, value: node.rawText})); // each table cell
 
-  console.log('what', rowColAttrs)
+  // console.log('what', rowColAttrs)
 
   const allRows = html.querySelectorAll('tr') // each table row
     .map(node => node.rawText
       .replace('\n', '')
       .split('\n')
       .filter(str => Boolean(str)));
-
-  const tableTitles = allRows.filter(row => row[0] === 'Title'); // titles from tables TH
-  const data = allRows.filter(row => row[0] !== 'Title'); // all rows, NOT including table header rows 
   
   let typeIndex = -1;
+  let tableHeaders = undefined
+  let tableCellIdx = 0
   const typeAndTitle = allRows.map((row) => {
-    if(row[0] === 'Title') typeIndex++;
+    if(row[0] === 'Title') {
+      typeIndex++;
+      tableHeaders = row;
+    }
     else {
-      return {
-        title: row[0],
-        type: tableType[typeIndex]
-      }
+      return row.map((value) => {
+        const noDumbValue = new RegExp(/\[.*?\]/, 'g')
+        if(!value.match(noDumbValue) && rowColAttrs[tableCellIdx].value !== '\n') {
+          console.log({cellWithinRow: value, cellValue: rowColAttrs[tableCellIdx].value})
+          tableCellIdx++;
+        }
+      })
+      // return {
+      //   title: row[0],
+      //   type: tableType[typeIndex]
+      // }
     }
   }).filter(obj => obj instanceof Object)
   // console.log('WHAT', typeAndTitle)
