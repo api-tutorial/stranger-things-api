@@ -15,25 +15,31 @@ const gimmeTheData = html => {
       .replace('\n', '')
       .split('\n')
       .filter(str => Boolean(str)));
+
+  const isTrash = (value) => {
+    const regexpToMatch = new RegExp(/\[.*?\]/, 'g')
+    const match = value.match(regexpToMatch)
+    return match ? value !== match[0] : true
+  }
     
   let typeIndex = -1;
   let tableHeaders = undefined
   let tableCellIdx = 0
+  let obj = {}
+  let columnIdx = 0
   const typeAndTitle = allRows.map((row) => {
     if(row[0] === 'Title') {
       typeIndex++;
       tableHeaders = row;
     }
     else {
-      return row.map((value) => {
-        const regexpToMatch = new RegExp(/\[.*?\]/, 'g')
-        const match = value.match(regexpToMatch)
-        const bool = match ? value !== match[0] : true
-        if(bool && rowColAttrs[tableCellIdx].value !== '') {
-          console.log({
-            cellWithinRow: value.replace(/\n/g, '').replace(/\[.*?\]/, ''), 
-            cellValue: rowColAttrs[tableCellIdx].value
-          })
+      return row.map((value, idx) => {
+        if(isTrash(value) && rowColAttrs[tableCellIdx].value !== '') {
+          let cleanVal = value.replace(/\n/g, '').replace(/\[.*?\]/, '') 
+          if(rowColAttrs[tableCellIdx].rowspan) {
+            console.log(rowColAttrs[tableCellIdx].value, cleanVal) 
+            // need to know what column and save it as that value in our next obj
+          }
           tableCellIdx++;
         }
       })
