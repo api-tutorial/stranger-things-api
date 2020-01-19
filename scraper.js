@@ -6,7 +6,7 @@ const gimmeTheData = html => {
     .map(node => node.rawText); // titles of table, outside table
 
   const rowColAttrs = html.querySelectorAll('td')
-    .map(node => ({ ...node.attributes, value: node.rawText})); // each table cell
+    .map(node => ({ ...node.attributes, value: node.rawText.replace(/\n/g, '').replace(/\[.*?\]/, '')})); // each table cell
 
   // console.log('what', rowColAttrs)
 
@@ -15,7 +15,7 @@ const gimmeTheData = html => {
       .replace('\n', '')
       .split('\n')
       .filter(str => Boolean(str)));
-  
+    
   let typeIndex = -1;
   let tableHeaders = undefined
   let tableCellIdx = 0
@@ -26,19 +26,19 @@ const gimmeTheData = html => {
     }
     else {
       return row.map((value) => {
-        const noDumbValue = new RegExp(/\[.*?\]/, 'g')
-        if(!value.match(noDumbValue) && rowColAttrs[tableCellIdx].value !== '\n') {
-          console.log({cellWithinRow: value, cellValue: rowColAttrs[tableCellIdx].value})
+        const regexpToMatch = new RegExp(/\[.*?\]/, 'g')
+        const match = value.match(regexpToMatch)
+        const bool = match ? value !== match[0] : true
+        if(bool && rowColAttrs[tableCellIdx].value !== '') {
+          console.log({
+            cellWithinRow: value.replace(/\n/g, '').replace(/\[.*?\]/, ''), 
+            cellValue: rowColAttrs[tableCellIdx].value
+          })
           tableCellIdx++;
         }
       })
-      // return {
-      //   title: row[0],
-      //   type: tableType[typeIndex]
-      // }
     }
   }).filter(obj => obj instanceof Object)
-  // console.log('WHAT', typeAndTitle)
 };
   
 const scraper = () => {
