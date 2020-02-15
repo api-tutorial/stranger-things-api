@@ -1,10 +1,16 @@
-const { parse } = require('node-html-parser');
-const request = require('superagent');
 const lodash = require('lodash');
-const nameScraper = require('./nameScraper')
 
 const removeSymbol = arr => arr.map(str => str.replace(' †', ''))
 const removeHtmlTags = str => str.replace('<small>', '').replace('</small>', '').replace('<p>', '').replace('</p>', '')
+
+const getDataToFormat = (html, name) => {
+  const labels = html.querySelectorAll('.pi-data-label').map(l => l.structuredText)
+  const values = html.querySelectorAll('div .pi-data-value')
+  const photoInfo = html.querySelectorAll('.pi-image-thumbnail').length 
+    ? html.querySelectorAll('.pi-image-thumbnail')[0].rawAttrs.split('"')[1] 
+    : 'https://upload.wikimedia.org/wikipedia/commons/3/38/Stranger_Things_logo.png' // default logo image
+  return { labels, values, photoInfo, name };
+}
 
 const reformatData = ({ labels, values, photoInfo, name }) => {
   if(labels.length === values.length) {
@@ -51,34 +57,9 @@ const reformatData = ({ labels, values, photoInfo, name }) => {
     return obj;
   }
   else undefined
-
 };
 
-const infoScraper = async() => {
-  const names = await nameScraper()
-
-  try {
-    return Promise.all(
-      names.map(name => {
-        return request.get(`https://strangerthings.fandom.com/wiki/${name}`)
-        .then(res => res.text)
-        .then(parse)
-        .then(html => {
-          const labels = html.querySelectorAll('.pi-data-label').map(l => l.structuredText)
-          const values = html.querySelectorAll('div .pi-data-value')
-          const photoInfo = html.querySelectorAll('.pi-image-thumbnail').length 
-            ? html.querySelectorAll('.pi-image-thumbnail')[0].rawAttrs.split('"')[1] 
-            : 'https://upload.wikimedia.org/wikipedia/commons/3/38/Stranger_Things_logo.png' // default logo image
-          return { labels, values: values.filter(v => v.text), photoInfo, name };
-        })
-        .then(reformatData)
-        .then(console.log)
-        .catch(err => console.log({ name, err }))
-      }))
-    }
-  catch(err) {
-    console.error(err)
-  }
-};
-
-infoScraper()
+module.exports = {
+  reformatData,
+  getDataToFormat
+}
