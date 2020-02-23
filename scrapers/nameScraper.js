@@ -12,6 +12,6 @@ module.exports = () => {
 const findCharLink = html => html.querySelectorAll('.category-page__member-link');
 const findCharNames = objs => {
   const names = objs.map(obj => obj.childNodes[0].rawText);
-  return names.filter(name => !name.includes('Category:') && !name.includes('Minor Characters'));
+  return names.filter(name => !name.includes('Category:') && !name.includes('Minor Characters') && !name.includes('Character List'));
 };
 
