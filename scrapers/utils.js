@@ -17,13 +17,13 @@ const reformatData = ({ labels, values, photoInfo, name }) => {
     const obj = {};
     obj.photo = photoInfo;
     obj.name = name;
-    labels.map((l, i) => {
+    return labels.reduce((acc, l, i) => {
       const label = lodash.camelCase(l)
       const value = values[i].text
       const htmlVal = values[i].innerHTML
       if(label === 'appearsInEpisodes') {
         let newVal = value.trim().split(' ')
-        obj[label] = newVal.length > 0 ? newVal : newVal[0]
+        acc[label] = newVal.length > 0 ? newVal : newVal[0]
       }
       else if(htmlVal.includes('<br />')) {
         if(label === 'affiliation') {
@@ -34,12 +34,12 @@ const reformatData = ({ labels, values, photoInfo, name }) => {
             if(str.includes('<a href')) return
             else return str
           })
-          obj[label] = newVal.filter(s => s)
+          acc[label] = newVal.filter(s => s)
         }
         else if(!htmlVal.includes('<a href')) {
           const newVal = htmlVal.split('<br />')
             .filter(s => s).map(s => removeHtmlTags(s))
-          obj[label] = removeSymbol(newVal)
+          acc[label] = removeSymbol(newVal)
         }
       }
       else if(value.includes(')') && label !== 'height') {
@@ -48,13 +48,13 @@ const reformatData = ({ labels, values, photoInfo, name }) => {
           newVal = newVal.map(s => s.replace(': ', '').trim())
         }
         newVal = removeSymbol(newVal)
-        obj[label] = newVal.length === 1 ? newVal[0] : newVal
+        acc[label] = newVal.length === 1 ? newVal[0] : newVal
       }
       else {
-        obj[label] = value
+        acc[label] = value
       }
-    });
-    return obj;
+      return acc;
+    }, obj);
   }
   else undefined
 };
