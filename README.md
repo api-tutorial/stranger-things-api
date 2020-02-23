@@ -2,14 +2,16 @@
 
 ## authors
 
-Paige Gorry
-Kate Dameron
+[Paige Gorry](https://github.com/paigeegorry) &&
+[Kate Dameron](https://github.com/katedam)
 
 ## Getting set up
 
-For this project you'll need to set up a Node.js server. We used Express.js but you can use whatever you want!
+For this project you'll need to set up a Node.js server. We used Express.js but you can use whatever you want! Check out [this tutorial](https://www.guru99.com/node-js-express.html).
 
-<!-- [insert links to setting up a node server with express] -->
+### Things to consider before scraping:
+Think about what you are scraping and how often that data changes. 
+  ###### If you are scraping data for a streaming service (Netflix, Hulu, etc.), think about how often shows are added to those sites. Do you have a schedule for how you want to maintain your API to keep it up to date? How will you maintain versioning on your API? 
 
 ## Step 1: Get set up to scrape some data!
 
@@ -44,9 +46,9 @@ module.exports = { scraper };
 
 ## Step 2: Make a game plan
 
-Open up your dev tools and inspect the elements that hold the data you need to scrape. In our case, the first thing we needed to do was grab each `h3` header with the class `mw-headline`. Here's a screenshot to see what we started with this:
+Open up your dev tools and inspect the elements that hold the data you need to scrape. In our case, the first thing we needed to do was grab each `h2` header with the class `pi-item`. Here's a screenshot to see what we started with this:
 
-![Game Plan](game_plan.png)
+![Game Plan](inspectView.png)
 
 ### First things first
 
