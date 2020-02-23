@@ -6,7 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "start:watch": "nodemon server.js"
+    "start:watch": "nodemon server.js",
+    "seed": "node seed.js",
+    "drop": "mongo stranger-things --eval 'db.dropDatabase()'",
+    "db-load-all": "npm run drop && npm run seed"
   },
   "repository": {
     "type": "git",

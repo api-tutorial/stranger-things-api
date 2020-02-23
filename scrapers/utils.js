@@ -52,7 +52,8 @@ const reformatData = ({ labels, values, photoInfo, name }) => {
         else {
           let newVal = htmlVal.split('>').map(str => str.trim())
             .filter(str => str[0] !== '<' && str[0] !== '/' && str.length > 0 && !str.includes('('))
-            .map(str => str.replace('</a', '').replace('</small', ''))
+            .map(str => str.replace('</a', '').replace('</small', '').replace('<small', '').replace('✝ ', ''))
+            .filter(str => !str.includes('<small'))
           newVal = newVal.map(str => {
             if(str.includes('<a href')) return
             else return str
@@ -81,3 +82,7 @@ module.exports = {
   reformatData,
   getDataToFormat
 }
+
+// Name: Nicole - otherRelations needs to be split
+// Eleven otherRelations: cross
+
