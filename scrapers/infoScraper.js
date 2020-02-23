@@ -14,7 +14,6 @@ const infoScraper = async() => {
         .then(parse)
         .then(html => getDataToFormat(html, name))
         .then(reformatData)
-        .then(console.log)
         .catch(err => console.log({ name, err }))
       }))
     }
@@ -23,4 +22,4 @@ const infoScraper = async() => {
   }
 };
 
-infoScraper()
+module.exports = infoScraper;

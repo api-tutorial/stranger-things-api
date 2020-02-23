@@ -2,6 +2,13 @@ const lodash = require('lodash');
 
 const removeSymbol = arr => arr.map(str => str.replace(' †', ''))
 const removeHtmlTags = str => str.replace('<small>', '').replace('</small>', '').replace('<p>', '').replace('</p>', '')
+const genFinalValue = (label, val) => {
+  if(['otherRelations', 'aliases', 'appearsInEpisodes', 'occupation', 'affiliation'].includes(label)) {
+    return val instanceof Array ? val : [val]
+  } else {
+    return val instanceof Array ? val[0] : val
+  }
+};
 
 const getDataToFormat = (html, name) => {
   const labels = html.querySelectorAll('.pi-data-label').map(l => l.structuredText)
@@ -22,10 +29,10 @@ const reformatData = ({ labels, values, photoInfo, name }) => {
       const value = values[i].text
       const htmlVal = values[i].innerHTML
       if(label === 'appearsInEpisodes') {
-        let newVal = value.trim().split(' ')
-        acc[label] = newVal.length > 0 ? newVal : newVal[0]
+        let newVal = value.trim().split(' ').map(s => s.replace(',', ''))
+        acc[label] = genFinalValue(label, newVal)
       }
-      else if(htmlVal.includes('<br />')) {
+      else if(htmlVal.includes('<br />') || htmlVal.includes('<br>')) {
         if(label === 'affiliation') {
           let newVal = htmlVal.split('>').map(str => str.trim())
             .filter(str => str[0] !== '<' && str[0] !== '/' && str.length > 0 && !str.includes('(formerly)'))
@@ -34,12 +41,23 @@ const reformatData = ({ labels, values, photoInfo, name }) => {
             if(str.includes('<a href')) return
             else return str
           })
-          acc[label] = newVal.filter(s => s)
+          acc[label] = genFinalValue(label, newVal.filter(s => s))
         }
         else if(!htmlVal.includes('<a href')) {
-          const newVal = htmlVal.split('<br />')
+          let newVal = htmlVal.split('<br />')
             .filter(s => s).map(s => removeHtmlTags(s))
-          acc[label] = removeSymbol(newVal)
+          newVal = removeSymbol(newVal)
+          acc[label] = genFinalValue(label, newVal)
+        }
+        else {
+          let newVal = htmlVal.split('>').map(str => str.trim())
+            .filter(str => str[0] !== '<' && str[0] !== '/' && str.length > 0 && !str.includes('('))
+            .map(str => str.replace('</a', '').replace('</small', ''))
+          newVal = newVal.map(str => {
+            if(str.includes('<a href')) return
+            else return str
+          })
+          acc[label] = genFinalValue(label, newVal.filter(s => s))
         }
       }
       else if(value.includes(')') && label !== 'height') {
@@ -48,10 +66,10 @@ const reformatData = ({ labels, values, photoInfo, name }) => {
           newVal = newVal.map(s => s.replace(': ', '').trim())
         }
         newVal = removeSymbol(newVal)
-        acc[label] = newVal.length === 1 ? newVal[0] : newVal
+        acc[label] = genFinalValue(label, value)
       }
       else {
-        acc[label] = value
+        acc[label] = genFinalValue(label, value)
       }
       return acc;
     }, obj);
