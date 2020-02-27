@@ -2,7 +2,14 @@ const lodash = require('lodash');
 
 const cleanUp = str => str.replace(':', '').trim();
 const removeSymbol = arr => arr.map(str => str && (str.includes('†') ? str.replace('†', '').trim() : str.trim()))
-const removeHtmlTags = str => str.replace('<small>', '').replace('</small>', '').replace('<p>', '').replace('</p>', '')
+const removeHtmlTags = str => (
+  str.replace('<small>', '')
+    .replace('</small>', '')
+    .replace('<p>', '')
+    .replace('</p>', '')
+    .replace('<br />', '')
+    .replace('<br>', '')
+);
 const genFinalValue = (label, val) => {
   if(['otherRelations', 'aliases', 'appearsInEpisodes', 'occupation', 'affiliation'].includes(label)) {
     return val instanceof Array ? val : [val]
@@ -47,7 +54,7 @@ const reformatData = ({ labels, values, photoInfo, name }) => {
             .map(str => str.replace('</a', '').replace('</small', ''))
           newVal = newVal.map(str => {
             if(str.includes('<a href')) return
-            else return str
+            else return removeHtmlTags(str)
           })
           acc[label] = genFinalValue(label, newVal.filter(s => s))
         }
@@ -64,7 +71,7 @@ const reformatData = ({ labels, values, photoInfo, name }) => {
             .filter(str => !str.includes('<small'))
           newVal = newVal.map(str => {
             if(str.includes('<a href')) return
-            else return str
+            else return removeHtmlTags(str)
           })
           newVal = removeSymbol(newVal).filter(s => s)
           acc[label] = genFinalValue(label, newVal)
@@ -78,6 +85,7 @@ const reformatData = ({ labels, values, photoInfo, name }) => {
             acc[label] = newVal
           } else {
             newVal = newVal.map(s => cleanUp(s))
+            acc[label] = genFinalValue(label, value)
           }
         }
         else {
