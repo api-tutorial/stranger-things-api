@@ -28,11 +28,16 @@ const reformatData = ({ labels, values, photoInfo, name }) => {
       const label = lodash.camelCase(l)
       const value = values[i].text
       const htmlVal = values[i].innerHTML
+
       if(label === 'appearsInEpisodes') {
         let newVal = value.trim().split(' ').map(s => s.replace(',', ''))
         acc[label] = genFinalValue(label, newVal)
       }
-      else if(htmlVal.includes('<br />') || htmlVal.includes('<br>')) {
+      else if(htmlVal.includes('<a href') && htmlVal.includes('<p>') && !htmlVal.includes('<br')) {
+        let newVal = value.split(')').filter(s => s).map(s => s.includes('(') ? s + ')' : s)
+        acc[label] = genFinalValue(label, newVal)
+      }
+      else if(htmlVal.includes('<br')) {
         if(label === 'affiliation') {
           let newVal = htmlVal.split('>').map(str => str.trim())
             .filter(str => str[0] !== '<' && str[0] !== '/' && str.length > 0 && !str.includes('(formerly)'))
