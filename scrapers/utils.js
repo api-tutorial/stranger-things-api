@@ -1,6 +1,7 @@
 const lodash = require('lodash');
 
-const removeSymbol = arr => arr.map(str => str.replace(' †', ''))
+const cleanUp = str => str.replace(':', '').trim();
+const removeSymbol = arr => arr.map(str => str.replace('†', '').trim())
 const removeHtmlTags = str => str.replace('<small>', '').replace('</small>', '').replace('<p>', '').replace('</p>', '')
 const genFinalValue = (label, val) => {
   if(['otherRelations', 'aliases', 'appearsInEpisodes', 'occupation', 'affiliation'].includes(label)) {
@@ -28,6 +29,8 @@ const reformatData = ({ labels, values, photoInfo, name }) => {
       const label = lodash.camelCase(l)
       const value = values[i].text
       const htmlVal = values[i].innerHTML
+
+      // label === 'residence' ? console.log({ value, htmlVal }) : null
 
       if(label === 'appearsInEpisodes') {
         let newVal = value.trim().split(' ').map(s => s.replace(',', ''))
@@ -63,16 +66,24 @@ const reformatData = ({ labels, values, photoInfo, name }) => {
             if(str.includes('<a href')) return
             else return str
           })
-          acc[label] = genFinalValue(label, newVal.filter(s => s))
+          newVal = removeSymbol(newVal).filter(s => s)
+          acc[label] = genFinalValue(label, newVal)
         }
       }
       else if(value.includes(')') && label !== 'height') {
         let newVal = value.split(')').map(s => s.length > 0 ? (s + ')').trim() : undefined).filter(s => s && s !== ')')
         if(label === 'residence') {
-          newVal = newVal.map(s => s.replace(': ', '').trim())
+          if(htmlVal.includes('<li>')) {
+            newVal = value.split(')').map(s => s.includes('(') ? cleanUp(s) + ')' : cleanUp(s)).filter(s => s)
+            acc[label] = newVal
+          } else {
+            newVal = newVal.map(s => cleanUp(s))
+          }
         }
-        newVal = removeSymbol(newVal)
-        acc[label] = genFinalValue(label, value)
+        else {
+          newVal = removeSymbol(newVal.map(s => cleanUp(s)))
+          acc[label] = genFinalValue(label, value)
+        }
       }
       else {
         acc[label] = genFinalValue(label, value)
@@ -87,7 +98,4 @@ module.exports = {
   reformatData,
   getDataToFormat
 }
-
-// Name: Nicole - otherRelations needs to be split
-// Eleven otherRelations: cross
 

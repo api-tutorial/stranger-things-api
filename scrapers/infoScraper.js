@@ -4,25 +4,22 @@ const nameScraper = require('./nameScraper')
 const { reformatData, getDataToFormat } = require('./utils')
 
 const infoScraper = async() => {
-  // const names = await nameScraper()
+  const names = await nameScraper()
 
   try {
-    // return Promise.all(
-      // names.map(name => {
-        return request.get(`https://strangerthings.fandom.com/wiki/Phil_Callahan`)
+    return Promise.all(
+      names.map(name => {
+        return request.get(`https://strangerthings.fandom.com/wiki/${name}`)
         .then(res => res.text)
         .then(parse)
-        .then(html => getDataToFormat(html, 'Phil Callahan'))
+        .then(html => getDataToFormat(html, name))
         .then(reformatData)
-        .then(console.log)
-        .catch(err => console.log({ err }))
-      // }))
+        .catch(err => console.log({ name, err }))
+      }))
     }
   catch(err) {
     console.error(err)
   }
 };
 
-infoScraper();
-
-// module.exports = infoScraper;
+module.exports = infoScraper;
