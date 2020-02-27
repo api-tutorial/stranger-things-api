@@ -1,7 +1,7 @@
 const lodash = require('lodash');
 
 const cleanUp = str => str.replace(':', '').trim();
-const removeSymbol = arr => arr.map(str => str.replace('†', '').trim())
+const removeSymbol = arr => arr.map(str => str && (str.includes('†') ? str.replace('†', '').trim() : str.trim()))
 const removeHtmlTags = str => str.replace('<small>', '').replace('</small>', '').replace('<p>', '').replace('</p>', '')
 const genFinalValue = (label, val) => {
   if(['otherRelations', 'aliases', 'appearsInEpisodes', 'occupation', 'affiliation'].includes(label)) {
