@@ -46,17 +46,17 @@ module.exports = { scraper };
 
 ## Step 2: Make a game plan
 
-Open up your dev tools and inspect the elements that hold the data you need to scrape. In our case, the first thing we needed to do was grab each `h2` header with the class `pi-item`. Here's a screenshot to see what we started with this:
+Open up your dev tools and inspect the elements that hold the data you need to scrape. In our case, the first thing we needed to do was grab each `h2` header with the class `pi-title`. Here's a screenshot to see what we started with this:
 
 ![Game Plan](inspectView.png)
 
 ### First things first
 
-- We can grab a series of elements like the `h3` by using the `querySelectorAll` method on the html we get back from the parser. To do this we made a helper function. Be sure to look at the documentation for your npm parser to see what kinds of selectors are available.
+- We can grab a series of elements like the `h2` by using the `querySelectorAll` method on the html we get back from the parser. To do this we made a helper function. Be sure to look at the documentation for your npm parser to see what kinds of selectors are available.
 
 ```
 const titlesList = html => html
-  .querySelectorAll('h3 .mw-headline')
+  .querySelectorAll('h2 .pi-title')
   .map(node => node.rawText);
 ```
 
