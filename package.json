@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/paigeegorry/api-tutorial#readme",
   "devDependencies": {
+    "chalk": "^3.0.0",
     "eslint": "^6.7.0",
     "node-html-parser": "^1.1.16",
     "nodemon": "^2.0.1",
