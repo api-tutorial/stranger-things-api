@@ -81,7 +81,7 @@ At this point you should be able to see the data and start to make decisions abo
 
 _We are using [MongoDB](https://docs.mongodb.com/manual/tutorial/getting-started/) with [Mongoose ODM](https://mongoosejs.com/docs/index.html) (object data modeling). The Mongoose documentation is top notch, whereas the MongoDB docs could use some work. Please reference their documentation for more information. **You will need MongoDB set up on your computer to follow along.** This is how we set up our database._
 
-#### A. Set up your schema
+#### a. Set up your schema
 
 Your schema is how you want your data to look in your database. Basically it is a blueprint for MongoDB. Since all of our data is information about the characters of _Stranger Things_ we need a character schema. For each key value pair from our data, we need to specify it's type. i.e. Here is a character we scraped:
 
@@ -169,7 +169,7 @@ scrapeData()
 
 To check out your data, we used [Robo3T](https://robomongo.org/), a free, open source MongoDB GUI. Check out their website for documentation on how to download and set this up on your machine. 
 
-#### 4. Routes
+#### Step 4: Routes
 This section requires some familiarity with [Express Router](http://expressjs.com/en/5x/api.html#router). 
 
 This section will just be a summary of the functionality of each of our routes. 
@@ -228,14 +228,14 @@ We recommend thinking of your users and data. What data would your users want? I
       .catch(next);
     });
 
-### 5. Deploy!
+### Step 5: Deploy!
 
 We decided to deploy to Heroku! Here are some resources:
 * [Deploying NodeJS App](https://devcenter.heroku.com/articles/deploying-nodejs)
 * [Deploying with Git](https://devcenter.heroku.com/articles/git)
 * [mLab noSQL DB set-up](https://devcenter.heroku.com/articles/mongolab)
 
-### 6. Document!
+### Step 6: Document!
 
 Take the time to document your application either in a README or create a front end! Provide information on your routes and what type of data users will be accessing. 
 
