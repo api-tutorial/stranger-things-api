@@ -169,3 +169,75 @@ scrapeData()
 
 To check out your data, we used [Robo3T](https://robomongo.org/), a free, open source MongoDB GUI. Check out their website for documentation on how to download and set this up on your machine. 
 
+#### 4. Routes
+This section requires some familiarity with [Express Router](http://expressjs.com/en/5x/api.html#router). 
+
+This section will just be a summary of the functionality of each of our routes. 
+
+**Hot Tip** 
+We recommend thinking of your users and data. What data would your users want? If you have _a lot_ of data, consider pagination as an option. Try and bounce off ideas with other devs to come up with your routes. 
+
+##### a. Get character by id
+    
+    .get('/:id', (req, res, next) => {
+      Character
+        .findById(req.params.id)
+        .select('-__v')
+        .then(character => res.send(character))
+        .catch(next);
+    })
+    
+
+##### b. Get random character(s)
+  Our get route looks very similar here... 
+
+    
+    .get('/random', (req, res, next) => {
+      const { count = 1 } = req.query;
+      Character
+        .getRandom(+count)
+        .then(character => res.send(character))
+        .catch(next);
+    })
+
+  You'll notice a custom static called 'getRandom' being used. You can create your own static method in your model schema. Check out the [docs](https://mongoosejs.com/docs/2.7.x/docs/methods-statics.html) to learn more.
+
+    characterSchema.statics.getRandom = function(count) {
+      return this.aggregate([{ $sample: { size: count }}, {$project: { __v: false}}]);
+    };
+
+##### c. Get characters + pagination + queries
+  For our get all characters route, we repurposed it to handle multiple functionalities including pagination and all queries. Check out the source code:
+
+    .get('/', (req, res, next) => {
+    const { page = 1, perPage = 20, ...search } = req.query;
+
+    const query = Object.entries(search)
+      .reduce((query, [key, value]) => {
+        query[key] = new RegExp(value, 'gmi');
+        return query;
+      }, {});
+
+    Character
+      .find(query)
+      .skip(+perPage * (+page - 1))
+      .limit(+perPage)
+      .lean()
+      .select('-__v')
+      .then(characters => res.send(characters))
+      .catch(next);
+    });
+
+### 5. Deploy!
+
+We decided to deploy to Heroku! Here are some resources:
+* [Deploying NodeJS App](https://devcenter.heroku.com/articles/deploying-nodejs)
+* [Deploying with Git](https://devcenter.heroku.com/articles/git)
+* [mLab noSQL DB set-up](https://devcenter.heroku.com/articles/mongolab)
+
+### 6. Document!
+
+Take the time to document your application either in a README or create a front end! Provide information on your routes and what type of data users will be accessing. 
+
+**Share your APIs with us on Twitter! [@katerj](https://twitter.com/katerj) [@paigeegorry](https://twitter.com/paigeegorry)**
+
