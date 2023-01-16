@@ -8,6 +8,8 @@ Authors > [Paige Gorry](https://github.com/paigeegorry) |
 
 ## #API_Documentation
 
+Explore our API here: [strangerthingsapi.netlify.app](https://strangerthingsapi.netlify.app/docs)
+
 ### Routes 
 **`GET /api/v1/characters`** - get all characters (default 20 per page)
 
